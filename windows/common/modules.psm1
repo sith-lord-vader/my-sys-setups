@@ -12,8 +12,9 @@ function Reset-Env {
 }
 
 function Install-Winget {
+    Write-Host "$args"
     winget install $args[0] --silent
-    Write-Host "$args[0] is now ready!"
+    Write-Host "$args is now ready!"
 }
 
 Export-ModuleMember -Function Reset-Env
