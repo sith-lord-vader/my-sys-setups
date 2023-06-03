@@ -83,15 +83,32 @@ Reset-Env
 
 # ! Setting up Powershell User Profile
 $UserProfileDir = "$HOME\Documents\PowerShell"
-if ($UserProfileDir) {
+if (Test-Path $UserProfileDir) {
 }
 else {
-    New-Item $TempDir -ItemType Directory
+    New-Item $UserProfileDir -ItemType Directory
 }
 
 Install-Module PowerType -AllowPrerelease
 Copy-Item -Path "$RepoLocation\windows\common\profile.ps1" -Destination "$UserProfileDir\Microsoft.PowerShell_profile.ps1"
-. $PROFILE
+
+# ! Configure Windows Terminal
+$WTProfileLocation = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
+if (Test-Path $WTProfileLocation) {
+}
+else {
+    New-Item $WTProfileLocation -ItemType Directory
+}
+
+$WTProfileLocation = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
+if (Test-Path $WTProfileLocation) {
+    Remove-Item $WTProfileLocation
+}
+else {
+}
+
+Copy-Item -Path "$RepoLocation\windows\common\wt.sjon" -Destination $WTProfileLocation
+
 
 Pause
 Stop-Process -Id $PID
