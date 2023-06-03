@@ -1,4 +1,10 @@
+function Write-Pretty {
+    # TODO: Add a pretty console Output
+}
+
 function Reset-Env {
+    # ? Inspiration taken from https://stackoverflow.com/a/56033268
+
     param(
     [String]$Key = "Path",
     [String]$Add = ""
@@ -49,3 +55,4 @@ function Install-Fonts {
 Export-ModuleMember -Function Reset-Env
 Export-ModuleMember -Function Install-Winget
 Export-ModuleMember -Function Install-Fonts
+Export-ModuleMember -Function Write-Pretty
