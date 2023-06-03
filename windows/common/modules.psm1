@@ -11,4 +11,10 @@ function Reset-Env {
         ) -match '.' -join ';')
 }
 
+function Install-Winget {
+    winget install $args[0] --silent
+    Write-Host "$args[0] is now ready!"
+}
+
 Export-ModuleMember -Function Reset-Env
+Export-ModuleMember -Function Install-Winget
