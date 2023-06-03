@@ -1,4 +1,4 @@
-# ! Run using Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sith-lord-vader/my-sys-setups/main/windows/setup.ps1" -o "setup.ps1" | iex "setup.ps1"
+# ! Run using Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sith-lord-vader/my-sys-setups/main/windows/setup-1.ps1" | iex
 
 function ResetPath {
     # ? Inspiration taken from https://stackoverflow.com/a/56033268
@@ -76,6 +76,22 @@ Remove-Item "$TempDir\CascadiaCode\ttf\static" -Recurse
 
 Install-Fonts -SourceDir "$TempDir\Meslo" -FileRegex "MesloLGLNerd*.ttf"
 Install-Fonts -SourceDir "$TempDir\CascadiaCode\ttf" -FileRegex "Cascadia*.ttf"
+
+# ! Install Oh-My-Posh
+Install-Winget JanDeDobbeleer.OhMyPosh
+Reset-Env
+
+# ! Setting up Powershell User Profile
+$UserProfileDir = "$HOME\Documents\PowerShell"
+if ($UserProfileDir) {
+}
+else {
+    New-Item $TempDir -ItemType Directory
+}
+
+Install-Module PowerType -AllowPrerelease
+Copy-Item -Path "$RepoLocation\windows\common\profile.ps1" -Destination "$UserProfileDir\Microsoft.PowerShell_profile.ps1"
+. $PROFILE
 
 Pause
 Stop-Process -Id $PID
