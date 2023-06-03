@@ -107,8 +107,7 @@ if (Test-Path $WTProfileLocation) {
 else {
 }
 
-Copy-Item -Path "$RepoLocation\windows\common\wt.sjon" -Destination $WTProfileLocation
-
+Copy-Item -Path "$RepoLocation\windows\common\wt.json" -Destination $WTProfileLocation
 
 Pause
 Stop-Process -Id $PID
