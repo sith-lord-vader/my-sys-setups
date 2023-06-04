@@ -51,10 +51,10 @@ else {
 # ! Import Common-Modules
 if (Test-Path "$CleanupLocation\.dev") { # ? Checking whether dev env
     Write-Host "Works"
-    Import-Module $RepoLocation\windows\common\modules.psm1 -Force
+    Import-Module "C:\Users\nobis\work\my-sys-setups\windows\common\modules.psm1" -Force
 }
 else {
-    Import-Module "C:\Users\nobis\work\my-sys-setups\windows\common\modules.psm1" -Force
+    Import-Module $RepoLocation\windows\common\modules.psm1 -Force
 }
 
 # ! Getting user requirements
@@ -80,16 +80,24 @@ Install-Winget Microsoft.WindowsTerminal
 Install-Winget 7zip.7zip
 
 # ! Installing Fonts 
-# TODO: Check if fonts already present, then skip this step
-Invoke-WebRequest -Uri "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.1/Meslo.zip" -OutFile "$TempDir\Meslo.zip"
-Invoke-WebRequest -Uri "https://github.com/microsoft/cascadia-code/releases/download/v2111.01/CascadiaCode-2111.01.zip" -OutFile "$TempDir\CascadiaCode.zip"
+if (Test-Font -Font "Cascadia Code") {
+    Write-Host "Cascadia Code is already present"
+}
+else {
+    Invoke-WebRequest -Uri "https://github.com/microsoft/cascadia-code/releases/download/v2111.01/CascadiaCode-2111.01.zip" -OutFile "$TempDir\CascadiaCode.zip"
+    Expand-7Zip -ArchiveFile "$TempDir\CascadiaCode.zip" -OutputDirectory "$TempDir\CascadiaCode"
+    Remove-Item "$TempDir\CascadiaCode\ttf\static" -Recurse
+    Install-Fonts -SourceDir "$TempDir\CascadiaCode\ttf" -FileRegex "Cascadia*.ttf"
+}
 
-Expand-7Zip -ArchiveFile "$TempDir\Meslo.zip" -OutputDirectory "$TempDir\Meslo"
-Expand-7Zip -ArchiveFile "$TempDir\CascadiaCode.zip" -OutputDirectory "$TempDir\CascadiaCode"
-Remove-Item "$TempDir\CascadiaCode\ttf\static" -Recurse
-
-Install-Fonts -SourceDir "$TempDir\Meslo" -FileRegex "MesloLGLNerd*.ttf"
-Install-Fonts -SourceDir "$TempDir\CascadiaCode\ttf" -FileRegex "Cascadia*.ttf"
+if (Test-Font -Font "MesloLGL Nerd Font" -ne $true) {
+    Write-Host "MesloLGL Nerd Font is already present"
+}
+else {
+    Invoke-WebRequest -Uri "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.1/Meslo.zip" -OutFile "$TempDir\Meslo.zip"
+    Expand-7Zip -ArchiveFile "$TempDir\Meslo.zip" -OutputDirectory "$TempDir\Meslo"
+    Install-Fonts -SourceDir "$TempDir\Meslo" -FileRegex "MesloLGLNerd*.ttf"
+}
 
 # ! Install Oh-My-Posh
 Install-Winget JanDeDobbeleer.OhMyPosh
@@ -144,12 +152,16 @@ New-Item -ItemType SymbolicLink -Path $WTProfileLocation -Target "$RepoLocation\
 $Setup2Location = "$CleanupLocation\setup-2.ps1"
 $SetupBatLocation = "$CleanupLocation\setup.bat"
 
-if (Test-Path $Setup2Location) {
-    Remove-Item $Setup2Location
+if (Test-Path "$CleanupLocation\.dev") {
 }
-
-if (Test-Path $SetupBatLocation) {
-    Remove-Item $SetupBatLocation
+else {
+    if (Test-Path $Setup2Location) {
+        Remove-Item $Setup2Location
+    }
+    
+    if (Test-Path $SetupBatLocation) {
+        Remove-Item $SetupBatLocation
+    }
 }
 
 Pause

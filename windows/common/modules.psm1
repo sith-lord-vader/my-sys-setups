@@ -127,9 +127,35 @@ function Show-Menu (){
     }
 }
 
+function Get-Fonts {
+    [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing")
+
+    $objFonts = New-Object System.Drawing.Text.InstalledFontCollection
+    $colFonts = $objFonts.Families
+
+    return $colFonts
+}
+
+function Test-Font {
+    param(
+    [String]$Font
+    )
+
+    $AllFonts = Get-Fonts
+    
+    for ($i = 1; $i -le $AllFonts.Count; $i++) {
+        if ($AllFonts[$i] -contains $Font) {
+            return $true
+        }
+    }
+    
+    return $false
+}
+
 Export-ModuleMember -Function Reset-Env
 Export-ModuleMember -Function Install-Winget
 Export-ModuleMember -Function Install-Fonts
 Export-ModuleMember -Function Write-Pretty
 Export-ModuleMember -Function Expand-7Zip
 Export-ModuleMember -Function Show-Menu
+Export-ModuleMember -Function Test-Font
