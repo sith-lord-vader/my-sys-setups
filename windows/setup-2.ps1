@@ -1,9 +1,4 @@
-# ! Run using Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sith-lord-vader/my-sys-setups/main/windows/setup-1.ps1" | iex
-
-$ProductionRun = 0
-if ($args -eq "production") {
-    $ProductionRun = 1
-}
+# ! Run using Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sith-lord-vader/my-sys-setups/main/windows/setup.ps1" | iex
 
 function ResetPath {
     # ? Inspiration taken from https://stackoverflow.com/a/56033268
@@ -33,6 +28,10 @@ if ((Test-Admin) -eq $false)  {
 
 # ? Actual script
 
+# ! Initializaing variables
+$CleanupLocation = $MyInvocation.MyCommand.Path
+$CleanupLocation = Split-Path $CleanupLocation -Parent
+
 # ! Setup Git
 winget install Git.Git --silent
 ResetPath
@@ -50,7 +49,8 @@ else {
 }
 
 # ! Import Common-Modules
-if ($ProductionRun) {
+if (Test-Path "$CleanupLocation\.dev") { # ? Checking whether dev env
+    Write-Host "Works"
     Import-Module $RepoLocation\windows\common\modules.psm1 -Force
 }
 else {
@@ -141,8 +141,6 @@ New-Item -ItemType SymbolicLink -Path $WTProfileLocation -Target "$RepoLocation\
 # TODO: multiple setup profiles for machines (eg. minimal, default). Choose at beginning of this script
 
 # ! Cleanup
-$CleanupLocation = $MyInvocation.MyCommand.Path
-$CleanupLocation = Split-Path $CleanupLocation -Parent
 $Setup2Location = "$CleanupLocation\setup-2.ps1"
 $SetupBatLocation = "$CleanupLocation\setup.bat"
 
