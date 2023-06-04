@@ -53,6 +53,7 @@ function Install-Fonts {
 }
 
 function Expand-7Zip {
+    Reset-Env -Add "C:\Program Files\7-Zip"
     Write-Host $args
     Write-Host $args[0]
     7z x $args[0] -o$args[1]
