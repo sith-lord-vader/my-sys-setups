@@ -41,7 +41,7 @@ function Install-Fonts {
         $FullPath = $F.FullName
         $Name = $F.Name
         $UserInstalledFonts = "$ENV:USERPROFILE\AppData\Local\Microsoft\Windows\Fonts"
-        If (!(Test-Path "$UserInstalledFonts\$Name")){
+        if (!(Test-Path "$UserInstalledFonts\$Name")){
             $Fonts.CopyHere($FullPath)
             Write-Host "[$Ctr of $Total] || Installed Font $Name...moving on!" -ForegroundColor Cyan
         }
@@ -62,8 +62,74 @@ function Expand-7Zip {
     7z x $ArchiveFile -o"$OutputDirectory"
 }
 
+function Show-Menu (){
+    
+    Param(
+        [Parameter(Mandatory=$True)][String]$MenuTitle,
+        [Parameter(Mandatory=$True)][System.Collections.Specialized.OrderedDictionary]$MenuOptionsTable
+    )
+
+    $MenuOptions = [String[]] $MenuOptionsTable.Values
+
+    $MaxValue = $MenuOptions.count-1
+    $Selection = 0
+    $EnterPressed = $False
+    
+    Clear-Host
+
+    While($EnterPressed -eq $False){
+        
+        Write-Host "$MenuTitle"
+
+        For ($i=0; $i -le $MaxValue; $i++){
+            
+            If ($i -eq $Selection){
+                Write-Host -BackgroundColor Cyan -ForegroundColor Black "[ $($MenuOptions[$i]) ]"
+            } Else {
+                Write-Host "  $($MenuOptions[$i])  "
+            }
+
+        }
+
+        $KeyInput = $host.ui.rawui.readkey("NoEcho,IncludeKeyDown").virtualkeycode
+
+        Switch($KeyInput){
+            13{
+                $EnterPressed = $True
+                Clear-Host
+                Return $MenuOptionsTable[$Selection]
+                break
+            }
+
+            38{
+                If ($Selection -eq 0){
+                    $Selection = $MaxValue
+                } Else {
+                    $Selection -= 1
+                }
+                Clear-Host
+                break
+            }
+
+            40{
+                If ($Selection -eq $MaxValue){
+                    $Selection = 0
+                } Else {
+                    $Selection +=1
+                }
+                Clear-Host
+                break
+            }
+            Default{
+                Clear-Host
+            }
+        }
+    }
+}
+
 Export-ModuleMember -Function Reset-Env
 Export-ModuleMember -Function Install-Winget
 Export-ModuleMember -Function Install-Fonts
 Export-ModuleMember -Function Write-Pretty
 Export-ModuleMember -Function Expand-7Zip
+Export-ModuleMember -Function Show-Menu

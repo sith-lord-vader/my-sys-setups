@@ -1,5 +1,10 @@
 # ! Run using Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sith-lord-vader/my-sys-setups/main/windows/setup-1.ps1" | iex
 
+$ProductionRun = 0
+if ($args -eq "production") {
+    $ProductionRun = 1
+}
+
 function ResetPath {
     # ? Inspiration taken from https://stackoverflow.com/a/56033268
 
@@ -45,8 +50,19 @@ else {
 }
 
 # ! Import Common-Modules
-Import-Module $RepoLocation\windows\common\modules.psm1 -Force
-Import-Module "C:\Users\nobis\work\my-sys-setups\windows\common\modules.psm1" -Force
+if ($ProductionRun) {
+    Import-Module $RepoLocation\windows\common\modules.psm1 -Force
+}
+else {
+    Import-Module "C:\Users\nobis\work\my-sys-setups\windows\common\modules.psm1" -Force
+}
+
+# ! Getting user requirements
+$MenuOptions = [ordered]@{1 = "laptop"}
+$DeviceType = Show-Menu -MenuTitle "For which device you want to run this?" -MenuOptions $MenuOptions
+
+$MenuOptions = [ordered]@{1 = "minimal"}
+$SetupType = Show-Menu -MenuTitle "Type of setup you want" -MenuOptions $MenuOptions
 
 # ! Setup Temp directory
 $TempDir = "$env:TEMP\my-sys-setups"
