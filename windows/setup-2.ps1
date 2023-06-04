@@ -84,12 +84,18 @@ Reset-Env
 $UserProfileDir = "$HOME\Documents\PowerShell"
 $UserProfileDirOneDrive = "$HOME\OneDrive\Documents\PowerShell"
 if (Test-Path $UserProfileDir) {
+    if (Test-Path "$UserProfileDir\Microsoft.PowerShell_profile.ps1") {
+        Remove-Item "$UserProfileDir\Microsoft.PowerShell_profile.ps1"
+    }
 }
 else {
     New-Item $UserProfileDir -ItemType Directory
 }
 
 if (Test-Path $UserProfileDirOneDrive) {
+    if (Test-Path "$UserProfileDirOneDrive\Microsoft.PowerShell_profile.ps1") {
+        Remove-Item "$UserProfileDirOneDrive\Microsoft.PowerShell_profile.ps1"
+    }
 }
 else {
     New-Item $UserProfileDirOneDrive -ItemType Directory
@@ -97,8 +103,8 @@ else {
 
 
 Install-Module PowerType -AllowPrerelease
-Copy-Item -Path "$RepoLocation\windows\common\profile.ps1" -Destination "$UserProfileDir\Microsoft.PowerShell_profile.ps1"
-Copy-Item -Path "$RepoLocation\windows\common\profile.ps1" -Destination "$UserProfileDirOneDrive\Microsoft.PowerShell_profile.ps1"
+New-Item -ItemType SymbolicLink -Path "$UserProfileDir\Microsoft.PowerShell_profile.ps1" -Target "$RepoLocation\windows\common\profile.ps1"
+New-Item -ItemType SymbolicLink -Path "$UserProfileDirOneDrive\Microsoft.PowerShell_profile.ps1" -Target "$RepoLocation\windows\common\profile.ps1"
 
 # ! Configure Windows Terminal
 $WTProfileLocation = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
@@ -114,9 +120,10 @@ if (Test-Path $WTProfileLocation) {
 }
 else {
 }
-
-Copy-Item -Path "$RepoLocation\windows\common\wt.json" -Destination $WTProfileLocation
+New-Item -ItemType SymbolicLink -Path $WTProfileLocation -Target "$RepoLocation\windows\common\wt.json"
 
 
 # TODO: multiple setup profiles for machines (eg. minimal, default). Choose at beginning of this script
+
+Pause
 Stop-Process -Id $PID
