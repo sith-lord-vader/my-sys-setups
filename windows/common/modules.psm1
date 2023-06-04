@@ -53,10 +53,13 @@ function Install-Fonts {
 }
 
 function Expand-7Zip {
+    param(
+    [String]$ArchiveFile,
+    [String]$OutputDirectory
+    )
+
     Reset-Env -Add "C:\Program Files\7-Zip"
-    Write-Host $args
-    Write-Host $args[0]
-    7z x $args[0] -o$args[1]
+    7z x $ArchiveFile -o"$OutputDirectory"
 }
 
 Export-ModuleMember -Function Reset-Env
