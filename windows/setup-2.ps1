@@ -69,8 +69,8 @@ Invoke-WebRequest -Uri "https://github.com/ryanoasis/nerd-fonts/releases/downloa
 Invoke-WebRequest -Uri "https://github.com/microsoft/cascadia-code/releases/download/v2111.01/CascadiaCode-2111.01.zip" -OutFile "$TempDir\CascadiaCode.zip"
 
 # TODO: Make a wrapper function for 7z to add 7z in PATH
-7z x "$TempDir\Meslo.zip" -o"$TempDir\Meslo"
-7z x "$TempDir\CascadiaCode.zip" -o"$TempDir\CascadiaCode"
+Expand-7Zip "$TempDir\Meslo.zip" "$TempDir\Meslo"
+Expand-7Zip "$TempDir\CascadiaCode.zip" "$TempDir\CascadiaCode"
 Remove-Item "$TempDir\CascadiaCode\ttf\static" -Recurse
 
 Install-Fonts -SourceDir "$TempDir\Meslo" -FileRegex "MesloLGLNerd*.ttf"

@@ -52,6 +52,10 @@ function Install-Fonts {
     }
 }
 
+function Expand-7Zip {
+    7z x $args[0] -o$args[1]
+}
+
 Export-ModuleMember -Function Reset-Env
 Export-ModuleMember -Function Install-Winget
 Export-ModuleMember -Function Install-Fonts
