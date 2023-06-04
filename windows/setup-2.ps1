@@ -9,9 +9,6 @@ function ResetPath {
     ) -match '.' -join ';'
 }
 
-winget install Microsoft.Powershell --silent
-ResetPath
-
 # ? Elevate the script to Admin
 function Test-Admin {
     $currentUser = New-Object Security.Principal.WindowsPrincipal $([Security.Principal.WindowsIdentity]::GetCurrent())
@@ -44,7 +41,7 @@ if (Test-Path $RepoLocation) {
     Git pull
 }
 else {
-    Git clone https://github.com/sith-lord-vader/my-sys-setups.git 
+    Git clone https://github.com/sith-lord-vader/my-sys-setups.git
 }
 
 # ! Import Common-Modules
@@ -66,10 +63,12 @@ Install-Winget Microsoft.WindowsTerminal
 Install-Winget 7zip.7zip
 Reset-Env -Add "C:\Program Files\7-Zip"
 
-# ! Installing Fonts
+# ! Installing Fonts 
+# TODO: Check if fonts already present, then skip this step
 Invoke-WebRequest -Uri "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.1/Meslo.zip" -OutFile "$TempDir\Meslo.zip"
 Invoke-WebRequest -Uri "https://github.com/microsoft/cascadia-code/releases/download/v2111.01/CascadiaCode-2111.01.zip" -OutFile "$TempDir\CascadiaCode.zip"
 
+# TODO: Make a wrapper function for 7z to add 7z in PATH
 7z x "$TempDir\Meslo.zip" -o"$TempDir\Meslo"
 7z x "$TempDir\CascadiaCode.zip" -o"$TempDir\CascadiaCode"
 Remove-Item "$TempDir\CascadiaCode\ttf\static" -Recurse
@@ -118,5 +117,6 @@ else {
 
 Copy-Item -Path "$RepoLocation\windows\common\wt.json" -Destination $WTProfileLocation
 
-Pause
+
+# TODO: multiple setup profiles for machines (eg. minimal, default). Choose at beginning of this script
 Stop-Process -Id $PID
