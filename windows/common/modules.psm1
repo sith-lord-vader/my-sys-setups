@@ -53,6 +53,8 @@ function Install-Fonts {
 }
 
 function Expand-7Zip {
+    Write-Host $args
+    Write-Host $args[0]
     7z x $args[0] -o$args[1]
 }
 
