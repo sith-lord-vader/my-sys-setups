@@ -46,6 +46,7 @@ else {
 
 # ! Import Common-Modules
 Import-Module $RepoLocation\windows\common\modules.psm1 -Force
+Import-Module "C:\Users\nobis\work\my-sys-setups\windows\common\modules.psm1" -Force
 
 # ! Setup Temp directory
 $TempDir = "$env:TEMP\my-sys-setups"
@@ -61,16 +62,14 @@ else {
 # ! Installing Windows Terminal and 7zip
 Install-Winget Microsoft.WindowsTerminal
 Install-Winget 7zip.7zip
-Reset-Env -Add "C:\Program Files\7-Zip"
 
 # ! Installing Fonts 
 # TODO: Check if fonts already present, then skip this step
 Invoke-WebRequest -Uri "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.1/Meslo.zip" -OutFile "$TempDir\Meslo.zip"
 Invoke-WebRequest -Uri "https://github.com/microsoft/cascadia-code/releases/download/v2111.01/CascadiaCode-2111.01.zip" -OutFile "$TempDir\CascadiaCode.zip"
 
-# TODO: Make a wrapper function for 7z to add 7z in PATH
-Expand-7Zip "$TempDir\Meslo.zip" "$TempDir\Meslo"
-Expand-7Zip "$TempDir\CascadiaCode.zip" "$TempDir\CascadiaCode"
+Expand-7Zip -ArchiveFile "$TempDir\Meslo.zip" -OutputDirectory "$TempDir\Meslo"
+Expand-7Zip -ArchiveFile "$TempDir\CascadiaCode.zip" -OutputDirectory "$TempDir\CascadiaCode"
 Remove-Item "$TempDir\CascadiaCode\ttf\static" -Recurse
 
 Install-Fonts -SourceDir "$TempDir\Meslo" -FileRegex "MesloLGLNerd*.ttf"
@@ -124,6 +123,20 @@ New-Item -ItemType SymbolicLink -Path $WTProfileLocation -Target "$RepoLocation\
 
 
 # TODO: multiple setup profiles for machines (eg. minimal, default). Choose at beginning of this script
+
+# ! Cleanup
+$CleanupLocation = $MyInvocation.MyCommand.Path
+$CleanupLocation = Split-Path $CleanupLocation -Parent
+$Setup2Location = "$CleanupLocation\setup-2.ps1"
+$SetupBatLocation = "$CleanupLocation\setup.bat"
+
+if (Test-Path $Setup2Location) {
+    Remove-Item $Setup2Location
+}
+
+if (Test-Path $SetupBatLocation) {
+    Remove-Item $SetupBatLocation
+}
 
 Pause
 Stop-Process -Id $PID
