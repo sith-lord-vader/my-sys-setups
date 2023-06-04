@@ -60,3 +60,4 @@ Export-ModuleMember -Function Reset-Env
 Export-ModuleMember -Function Install-Winget
 Export-ModuleMember -Function Install-Fonts
 Export-ModuleMember -Function Write-Pretty
+Export-ModuleMember -Function Expand-7Zip
