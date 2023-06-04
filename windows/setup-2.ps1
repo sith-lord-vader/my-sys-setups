@@ -83,14 +83,23 @@ Reset-Env
 
 # ! Setting up Powershell User Profile
 $UserProfileDir = "$HOME\Documents\PowerShell"
+$UserProfileDirOneDrive = "$HOME\OneDrive\Documents\PowerShell"
 if (Test-Path $UserProfileDir) {
 }
 else {
     New-Item $UserProfileDir -ItemType Directory
 }
 
+if (Test-Path $UserProfileDirOneDrive) {
+}
+else {
+    New-Item $UserProfileDirOneDrive -ItemType Directory
+}
+
+
 Install-Module PowerType -AllowPrerelease
 Copy-Item -Path "$RepoLocation\windows\common\profile.ps1" -Destination "$UserProfileDir\Microsoft.PowerShell_profile.ps1"
+Copy-Item -Path "$RepoLocation\windows\common\profile.ps1" -Destination "$UserProfileDirOneDrive\Microsoft.PowerShell_profile.ps1"
 
 # ! Configure Windows Terminal
 $WTProfileLocation = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
