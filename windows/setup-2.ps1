@@ -42,6 +42,7 @@ $RepoLocation = "$HOME\my-sys-setups"
 
 if (Test-Path $RepoLocation) {
     Set-Location -Path $RepoLocation
+    Git reset --hard HEAD
     Git pull
 }
 else {
