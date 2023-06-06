@@ -146,6 +146,8 @@ else {
 }
 New-Item -ItemType SymbolicLink -Path $WTProfileLocation -Target "$RepoLocation\windows\common\wt.json"
 
+# ! Set SSH-Agent startup to automatic
+Set-Service ssh-agent -StartupType Automatic 
 
 # TODO: multiple setup profiles for machines (eg. minimal, default). Choose at beginning of this script
 
