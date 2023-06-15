@@ -149,7 +149,13 @@ New-Item -ItemType SymbolicLink -Path $WTProfileLocation -Target "$RepoLocation\
 # ! Set SSH-Agent startup to automatic
 Set-Service ssh-agent -StartupType Automatic 
 
+# TODO: start ssh-agent
+
+# TODO: Set proper permission for ssh public keys
+
 # TODO: multiple setup profiles for machines (eg. minimal, default). Choose at beginning of this script
+
+# TODO: nvim setup
 
 # ! Cleanup
 $Setup2Location = "$CleanupLocation\setup-2.ps1"
